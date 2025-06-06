@@ -4,4 +4,4 @@ project(XPERMath)
 
 set(SRC_FILES __empty__.cpp Source/vector.h Source/matrix.h Source/quaternion.h)
 
-add_library(XPERMath STATIC ${SRC_FILES})
+add_executable(XPERMath ${SRC_FILES})
