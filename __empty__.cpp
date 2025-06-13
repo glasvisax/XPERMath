@@ -37,7 +37,5 @@ void printMatrix(matrix<T, N> mat)
 
 void main()
 {
-
-	printMatrix(eulRotZ(to_radians(90.0f)));
-
+	printMatrix(eulRotX<3>(to_radians(90.0f)));
 }
