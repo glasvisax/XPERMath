@@ -1,19 +1,31 @@
+#pragma once
+
+#include <cstring>
 #include "vector.h"
 
-namespace xm 
+namespace xm
 {
 	template <typename T, uint8_t N>
 	struct matrix;
-	
+
 	template <typename T>
 	struct matrix<T, 2>
 	{
 		static_assert(std::is_floating_point_v<T>);
+
+		matrix()
+		{
+			this->a.x = 0.0;
+			this->a.y = 0.0;
+			this->b.x = 0.0;
+			this->b.y = 0.0;
+		}
+
 		matrix(T a)
 		{
 			this->a.x = a;
-			this->a.y = 0;
-			this->b.x = 0;
+			this->a.y = 0.0;
+			this->b.x = 0.0;
 			this->b.y = a;
 		}
 
@@ -42,18 +54,33 @@ namespace xm
 	{
 		static_assert(std::is_floating_point_v<T>);
 
+		matrix()
+		{
+			this->a.x = 0.0;
+			this->a.y = 0.0;
+			this->a.z = 0.0;
+
+			this->b.x = 0.0;
+			this->b.y = 0.0;
+			this->b.z = 0.0;
+
+			this->c.x = 0.0;
+			this->c.y = 0.0;
+			this->c.z = 0.0;
+		}
+
 		matrix(T a)
 		{
 			this->a.x = a;
-			this->a.y = 0;
-			this->a.z = 0;
+			this->a.y = 0.0;
+			this->a.z = 0.0;
 
-			this->b.x = 0;
+			this->b.x = 0.0;
 			this->b.y = a;
-			this->b.z = 0;
+			this->b.z = 0.0;
 
-			this->c.x = 0;
-			this->c.y = 0;
+			this->c.x = 0.0;
+			this->c.y = 0.0;
 			this->c.z = a;
 		}
 
@@ -84,26 +111,31 @@ namespace xm
 	{
 		static_assert(std::is_floating_point_v<T>);
 
+		matrix()
+		{
+			memset(&this->a.x, static_cast<int>(T(0.0)), 16 * sizeof(T));
+		}
+
 		matrix(T a)
 		{
 			this->a.x = a;
-			this->a.y = 0;
-			this->a.z = 0;
-			this->a.w = 0;
+			this->a.y = 0.0;
+			this->a.z = 0.0;
+			this->a.w = 0.0;
 
-			this->b.x = 0;
+			this->b.x = 0.0;
 			this->b.y = a;
-			this->b.z = 0;
-			this->b.w = 0;
+			this->b.z = 0.0;
+			this->b.w = 0.0;
 
-			this->c.x = 0;
-			this->c.y = 0;
+			this->c.x = 0.0;
+			this->c.y = 0.0;
 			this->c.z = a;
-			this->c.w = 0;
+			this->c.w = 0.0;
 
-			this->d.x = 0;
-			this->d.y = 0;
-			this->d.z = 0;
+			this->d.x = 0.0;
+			this->d.y = 0.0;
+			this->d.z = 0.0;
 			this->d.w = a;
 		}
 
@@ -130,4 +162,37 @@ namespace xm
 			return *(&a + i);
 		}
 	};
+
+	template <typename T, uint8_t N>
+	matrix<T, N> operator*(matrix<T, N> a, matrix<T, N> b)
+	{
+		matrix<T, N> res;
+		for (int i = 0; i < N; ++i)
+		{
+			for (int j = 0; j < N; ++j)
+			{
+				for (int k = 0; k < N; ++k)
+				{
+					res[i][j] += a[k][j] * b[i][k];
+				}
+
+			}
+		}
+		return res;
+	}
+
+	template <typename T, uint8_t N>
+	vector<T, N> operator*(matrix<T, N> a, vector<T, N> b)
+	{
+		vector<T, N> res;
+		for (int i = 0; i < N; ++i)
+		{
+			for (int j = 0; j < N; ++j)
+			{
+				res[i] += a[j][i] * b[j];
+			}
+		}
+		return res;
+	}
+
 }

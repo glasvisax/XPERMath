@@ -1,3 +1,5 @@
+#pragma once
+
 #include <cmath>
 #include "vector.h"
 #include "matrix.h"
@@ -211,11 +213,10 @@ namespace xm
 		return res;
 	}
 
-	//TODO : other
 	template <typename T>
-	quaternion<T> quat_from_euler_xyz(vector<T, 3> e)
+	quaternion<T> quat_from_euler_x(T x)
 	{
-		quaternion<T> qx(
+		return quaternion<T>(
 			cos(e.x / 2),
 			vector<T, 3>(
 				sin(e.x / 2),
@@ -223,8 +224,12 @@ namespace xm
 				T(0.0)
 			)
 		);
+	}
 
-		quaternion<T> qy(
+	template <typename T>
+	quaternion<T> quat_from_euler_y(T y)
+	{
+		return quaternion<T>(
 			cos(e.y / 2),
 			vector<T, 3>(
 				T(0.0),
@@ -232,8 +237,11 @@ namespace xm
 				T(0.0)
 			)
 		);
-
-		quaternion<T> qz(
+	}
+	template <typename T>
+	quaternion<T> quat_from_euler_z(T z)
+	{
+		return quaternion<T>(
 			cos(e.z / 2),
 			vector<T, 3>(
 				T(0.0),
@@ -242,10 +250,67 @@ namespace xm
 			)
 		);
 
+	}
+
+	template <typename T>
+	quaternion<T> quat_from_euler_xyz(vector<T, 3> e)
+	{
+		quaternion<T> qx = quat_from_euler_x(e.x);
+		quaternion<T> qy = quat_from_euler_y(e.y);
+		quaternion<T> qz = quat_from_euler_z(e.z);
+
 		return normalize(qz * qy * qx);
 	}
 
+	template <typename T>
+	quaternion<T> quat_from_euler_xzy(vector<T, 3> e)
+	{
+		quaternion<T> qx = quat_from_euler_x(e.x);
+		quaternion<T> qy = quat_from_euler_y(e.y);
+		quaternion<T> qz = quat_from_euler_z(e.z);
 
+		return normalize(qy * qz * qx);
+	}
+
+	template <typename T>
+	quaternion<T> quat_from_euler_yxz(vector<T, 3> e)
+	{
+		quaternion<T> qx = quat_from_euler_x(e.x);
+		quaternion<T> qy = quat_from_euler_y(e.y);
+		quaternion<T> qz = quat_from_euler_z(e.z);
+
+		return normalize(qz * qx * qy);
+	}
+
+	template <typename T>
+	quaternion<T> quat_from_euler_yzx(vector<T, 3> e)
+	{
+		quaternion<T> qx = quat_from_euler_x(e.x);
+		quaternion<T> qy = quat_from_euler_y(e.y);
+		quaternion<T> qz = quat_from_euler_z(e.z);
+
+		return normalize(qx * qz * qy);
+	}
+
+	template <typename T>
+	quaternion<T> quat_from_euler_zxy(vector<T, 3> e)
+	{
+		quaternion<T> qx = quat_from_euler_x(e.x);
+		quaternion<T> qy = quat_from_euler_y(e.y);
+		quaternion<T> qz = quat_from_euler_z(e.z);
+
+		return normalize(qy * qx * qz);
+	}
+
+	template <typename T>
+	quaternion<T> quat_from_euler_zyx(vector<T, 3> e)
+	{
+		quaternion<T> qx = quat_from_euler_x(e.x);
+		quaternion<T> qy = quat_from_euler_y(e.y);
+		quaternion<T> qz = quat_from_euler_z(e.z);
+
+		return normalize(qx * qy * qz);
+	}
 }
 
 

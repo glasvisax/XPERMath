@@ -1,4 +1,5 @@
 #pragma once
+
 #include <type_traits>
 #include "assert.h"
 
@@ -234,9 +235,6 @@ namespace xm
 	{
 		return operator+(a, -b);
 	}
-
-
-
 
 
 }
