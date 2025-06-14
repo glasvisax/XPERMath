@@ -236,6 +236,22 @@ namespace xm
 		return operator+(a, -b);
 	}
 
+	template <typename T, uint8_t N>
+	inline T sumOfSquares(vector<T, N> a)
+	{
+		T sum = 0.0;
+		for (int i = 0; i < N; ++i)
+		{
+			sum += a[i] * a[i];
+		}
+		return sum;
+	}
+
+	template <typename T, uint8_t N>
+	inline T normalize(vector<T, N> a)
+	{
+		return sqrt(sumOfSquares(a));
+	}
 
 }
 
