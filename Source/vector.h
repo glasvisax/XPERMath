@@ -160,6 +160,52 @@ namespace xm
 	};
 
 	template <uint8_t N, typename T>
+	vector<N, T> operator*(vector<N, T> a, T v)
+	{
+		vector<T, N> res;
+		for (int i = 0; i < N; ++i)
+		{
+			res[i] = a[i] * v;
+		}
+		return res;
+	}
+
+	template <uint8_t N, typename T>
+	inline vector<N, T> operator*(T v, vector<N, T> a)
+	{
+		return operator*(a, v);
+	}
+
+	template <uint8_t N, typename T>
+	vector<N, T> operator/(vector<N, T> a, T v)
+	{
+		vector<T, N> res;
+		for (int i = 0; i < N; ++i)
+		{
+			res[i] = a[i] / v;
+		}
+		return res;
+	}
+
+	template <uint8_t N, typename T>
+	vector<N, T> operator+(vector<N, T> a, vector<N, T> b)
+	{
+		vector<T, N> res;
+		for (int i = 0; i < N; ++i)
+		{
+			res[i] = a[i] + b[i];
+		}
+		return res;
+	}
+
+	template <uint8_t N, typename T>
+	inline vector<N, T> operator-(vector<N, T> a, vector<N, T> b)
+	{
+		return operator+(a, -b);
+	}
+
+
+	template <uint8_t N, typename T>
 	T dot(vector<N, T> a, vector<N, T> b)
 	{
 		T res = T(0.0);
@@ -203,40 +249,6 @@ namespace xm
 	}
 
 	template <uint8_t N, typename T>
-	vector<N, T> operator*(vector<N, T> a, T v)
-	{
-		vector<T, N> res;
-		for (int i = 0; i < N; ++i)
-		{
-			res[i] = a[i] * v;
-		}
-		return res;
-	}
-
-	template <uint8_t N, typename T>
-	inline vector<N, T> operator*(T v, vector<N, T> a)
-	{
-		return operator*(a, v);
-	}
-
-	template <uint8_t N, typename T>
-	vector<N, T> operator+(vector<N, T> a, vector<N, T> b)
-	{
-		vector<T, N> res;
-		for (int i = 0; i < N; ++i)
-		{
-			res[i] = a[i] + b[i];
-		}
-		return res;
-	}
-
-	template <uint8_t N, typename T>
-	inline vector<N, T> operator-(vector<N, T> a, vector<N, T> b)
-	{
-		return operator+(a, -b);
-	}
-
-	template < uint8_t N, typename T>
 	inline T sumOfSquares(vector<N, T> a)
 	{
 		T sum = 0.0;
@@ -247,10 +259,10 @@ namespace xm
 		return sum;
 	}
 
-	template < uint8_t N, typename T>
-	inline T normalize(vector<N, T> a)
+	template <uint8_t N, typename T>
+	inline vector<N, T> normalize(vector<N, T> a)
 	{
-		return sqrt(sumOfSquares(a));
+		return vector<N, T> / sqrt(sumOfSquares(a));
 	}
 
 }
