@@ -5,11 +5,11 @@
 
 namespace xm
 {
-	template <typename T, uint8_t N>
+	template <uint8_t N, typename T>
 	struct matrix;
 
 	template <typename T>
-	struct matrix<T, 2>
+	struct matrix<2, T>
 	{
 		static_assert(std::is_floating_point_v<T>);
 
@@ -29,28 +29,34 @@ namespace xm
 			this->b.y = a;
 		}
 
-		matrix(const vector<T, 2>& a, const vector<T, 2>& b)
+		matrix(vector<2, T> a)
+		{
+			this->a = vector<T, 2>(a.x, 0.0);
+			this->b = vector<T, 2>(0.0, a.y);
+		}
+
+		matrix(vector<2, T> a, vector<2, T> b)
 		{
 			this->a = a;
 			this->b = b;
 		}
 
-		vector<T, 2>& operator[] (uint8_t i)
+		vector<2, T>& operator[] (uint8_t i)
 		{
 			return *(&a + i);
 		}
 
-		const vector<T, 2>& operator[] (uint8_t i) const
+		const vector<2, T>& operator[] (uint8_t i) const
 		{
 			return (&a + i);
 		}
 
-		vector<T, 2> a;
-		vector<T, 2> b;
+		vector<2, T> a;
+		vector<2, T> b;
 	};
 
 	template <typename T>
-	struct matrix<T, 3>
+	struct matrix<3, T>
 	{
 		static_assert(std::is_floating_point_v<T>);
 
@@ -84,30 +90,37 @@ namespace xm
 			this->c.z = a;
 		}
 
-		matrix(const vector<T, 3>& a, const vector<T, 3>& b, const vector<T, 3>& c)
+		matrix(vector<3, T> a)
+		{
+			this->a = vector<T, 3>(a.x, 0.0, 0.0);
+			this->b = vector<T, 3>(0.0, a.y, 0.0);
+			this->c = vector<T, 3>(0.0, 0.0, a.z);
+		}
+
+		matrix(vector<3, T> a, vector<3, T> b, vector<3, T> c)
 		{
 			this->a = a;
 			this->b = b;
 			this->c = c;
 		}
 
-		vector<T, 3>& operator[] (uint8_t i)
+		vector<3, T>& operator[] (uint8_t i)
 		{
 			return *(&a + i);
 		}
 
-		const vector<T, 3>& operator[] (uint8_t i) const
+		const vector<3, T>& operator[] (uint8_t i) const
 		{
 			return (&a + i);
 		}
 
-		vector<T, 3> a;
-		vector<T, 3> b;
-		vector<T, 3> c;
+		vector<3, T> a;
+		vector<3, T> b;
+		vector<3, T> c;
 	};
 
 	template <typename T>
-	struct matrix<T, 4>
+	struct matrix<4, T>
 	{
 		static_assert(std::is_floating_point_v<T>);
 
@@ -139,7 +152,22 @@ namespace xm
 			this->d.w = a;
 		}
 
-		matrix(const vector<T, 4>& a, const vector<T, 4>& b, const vector<T, 4>& c, const vector<T, 4>& d)
+		matrix(vector<3, T> a)
+		{
+			this->a = vector<T, 4>(a.x, 0.0, 0.0, 0.0);
+			this->b = vector<T, 4>(0.0, a.y, 0.0, 0.0);
+			this->c = vector<T, 4>(0.0, 0.0, a.z, 0.0);
+			this->d = vector<T, 4>(0.0, 0.0, 0.0, 1.0);
+		}
+		matrix(vector<4, T> a)
+		{
+			this->a = vector<T, 4>(a.x, 0.0, 0.0, 0.0);
+			this->b = vector<T, 4>(0.0, a.y, 0.0, 0.0);
+			this->c = vector<T, 4>(0.0, 0.0, a.z, 0.0);
+			this->d = vector<T, 4>(0.0, 0.0, 0.0, a.w);
+		}
+
+		matrix(const vector<4, T>& a, const vector<4, T>& b, const vector<4, T>& c, const vector<4, T>& d)
 		{
 			this->a = a;
 			this->b = b;
@@ -147,26 +175,26 @@ namespace xm
 			this->d = d;
 		}
 
-		vector<T, 4> a;
-		vector<T, 4> b;
-		vector<T, 4> c;
-		vector<T, 4> d;
+		vector<4, T> a;
+		vector<4, T> b;
+		vector<4, T> c;
+		vector<4, T> d;
 
-		vector<T, 4>& operator[] (uint8_t i)
+		vector<4, T>& operator[] (uint8_t i)
 		{
 			return *(&a + i);
 		}
 
-		const vector<T, 4>& operator[] (uint8_t i) const
+		const vector<4, T>& operator[] (uint8_t i) const
 		{
 			return *(&a + i);
 		}
 	};
 
-	template <typename T, uint8_t N>
-	matrix<T, N> operator*(matrix<T, N> a, matrix<T, N> b)
+	template <uint8_t N, typename T>
+	matrix<N, T> operator*(matrix<N, T> a, matrix<N, T> b)
 	{
-		matrix<T, N> res;
+		matrix<N, T> res;
 		for (int i = 0; i < N; ++i)
 		{
 			for (int j = 0; j < N; ++j)
@@ -181,10 +209,10 @@ namespace xm
 		return res;
 	}
 
-	template <typename T, uint8_t N>
-	vector<T, N> operator*(matrix<T, N> a, vector<T, N> b)
+	template <uint8_t N, typename T>
+	vector<N, T> operator*(matrix<N, T> a, vector<N, T> b)
 	{
-		vector<T, N> res;
+		vector<N, T> res;
 		for (int i = 0; i < N; ++i)
 		{
 			for (int j = 0; j < N; ++j)

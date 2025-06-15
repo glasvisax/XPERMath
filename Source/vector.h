@@ -5,11 +5,11 @@
 
 namespace xm
 {
-	template <typename T, uint8_t N>
+	template <uint8_t N, typename T>
 	struct vector;
 
 	template<typename T>
-	struct vector<T, 2>
+	struct vector<2, T>
 	{
 		static_assert(std::is_floating_point_v<T> || std::is_integral_v<T>);
 
@@ -57,7 +57,7 @@ namespace xm
 	};
 
 	template<typename T>
-	struct vector<T, 3>
+	struct vector<3, T>
 	{
 		static_assert(std::is_floating_point_v<T> || std::is_integral_v<T>);
 		vector(T x, T y, T z)
@@ -107,7 +107,7 @@ namespace xm
 
 
 	template<typename T>
-	struct vector<T, 4>
+	struct vector<4, T>
 	{
 		static_assert(std::is_floating_point_v<T> || std::is_integral_v<T>);
 		vector(T x, T y, T z, T w)
@@ -159,8 +159,8 @@ namespace xm
 		};
 	};
 
-	template <typename T, uint8_t N>
-	T dot(vector<T, N> a, vector<T, N> b)
+	template <uint8_t N, typename T>
+	T dot(vector<N, T> a, vector<N, T> b)
 	{
 		T res = T(0.0);
 
@@ -173,7 +173,7 @@ namespace xm
 	}
 
 	template <typename T>
-	vector<T, 3> crossRH(vector<T, 3> a, vector<T, 3> b)
+	vector<3, T> crossRH(vector<3, T> a, vector<3, T> b)
 	{
 		vector<T, 3> res;
 
@@ -185,25 +185,25 @@ namespace xm
 	}
 
 	template <typename T>
-	inline vector<T, 3> crossLH(vector<T, 3> a, vector<T, 3> b)
+	inline vector<3, T> crossLH(vector<3, T> a, vector<3, T> b)
 	{
 		return -crossRH(a, b);
 	}
 
 	template <typename T>
-	inline vector<T, 3> cross(vector<T, 3> a, vector<T, 3> b)
+	inline vector<3, T> cross(vector<3, T> a, vector<3, T> b)
 	{
 		return crossRH(a, b);
 	}
 
 	template <typename T>
-	T cross2D(vector<T, 2> a, vector<T, 2> b)
+	T cross2D(vector<2, T> a, vector<2, T> b)
 	{
 		return a.x * b.y - a.y * b.x;
 	}
 
-	template <typename T, uint8_t N>
-	vector<T, N> operator*(vector<T, N> a, T v)
+	template <uint8_t N, typename T>
+	vector<N, T> operator*(vector<N, T> a, T v)
 	{
 		vector<T, N> res;
 		for (int i = 0; i < N; ++i)
@@ -213,14 +213,14 @@ namespace xm
 		return res;
 	}
 
-	template <typename T, uint8_t N>
-	inline vector<T, N> operator*(T v, vector<T, N> a)
+	template <uint8_t N, typename T>
+	inline vector<N, T> operator*(T v, vector<N, T> a)
 	{
 		return operator*(a, v);
 	}
 
-	template <typename T, uint8_t N>
-	vector<T, N> operator+(vector<T, N> a, vector<T, N> b)
+	template <uint8_t N, typename T>
+	vector<N, T> operator+(vector<N, T> a, vector<N, T> b)
 	{
 		vector<T, N> res;
 		for (int i = 0; i < N; ++i)
@@ -230,14 +230,14 @@ namespace xm
 		return res;
 	}
 
-	template <typename T, uint8_t N>
-	inline vector<T, N> operator-(vector<T, N> a, vector<T, N> b)
+	template <uint8_t N, typename T>
+	inline vector<N, T> operator-(vector<N, T> a, vector<N, T> b)
 	{
 		return operator+(a, -b);
 	}
 
-	template <typename T, uint8_t N>
-	inline T sumOfSquares(vector<T, N> a)
+	template < uint8_t N, typename T>
+	inline T sumOfSquares(vector<N, T> a)
 	{
 		T sum = 0.0;
 		for (int i = 0; i < N; ++i)
@@ -247,8 +247,8 @@ namespace xm
 		return sum;
 	}
 
-	template <typename T, uint8_t N>
-	inline T normalize(vector<T, N> a)
+	template < uint8_t N, typename T>
+	inline T normalize(vector<N, T> a)
 	{
 		return sqrt(sumOfSquares(a));
 	}

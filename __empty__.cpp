@@ -7,9 +7,11 @@
 
 using namespace xm;
 
-using vec3 = vector<float, 3>;
-template <typename T, uint8_t N>
-void printVector(vector<T, N> vec)
+using vec3 = vector<3, float>;
+using mat4 = matrix<4, float>;
+
+template <uint8_t N, typename T>
+void printVector(vector<N, T> vec)
 {
 	const char* sep = "";
 	for (int i = 0; i < N; ++i)
@@ -20,8 +22,8 @@ void printVector(vector<T, N> vec)
 	std::cout << "\n";
 }
 
-template <typename T, uint8_t N>
-void printMatrix(matrix<T, N> mat)
+template <uint8_t N, typename T>
+void printMatrix(matrix<N, T> mat)
 {
 	const char* sep = "";
 	for (int i = 0; i < N; ++i)
@@ -34,10 +36,9 @@ void printMatrix(matrix<T, N> mat)
 	}
 }
 
-
 void main()
 {
-	printMatrix(eulRotZ<3>(to_radians(90.0f)));
+	printMatrix(eulRotZ<4>(to_radians(90.0f)));
 
-	printMatrix(rodriguesMatrix<4>(vec3(0.0f, 0.0f, 1.0f), to_radians(90.0f)));
+	printMatrix(translate(mat4(1.0f), vec3(2.0f, 2.0f, 2.0f)));
 }
