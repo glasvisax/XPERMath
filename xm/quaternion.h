@@ -10,10 +10,10 @@ namespace xm
 	struct quaternion
 	{
 		quaternion() = default;
-		quaternion(T w, vector<T, 3> m) : w(w), m(m) {}
+		quaternion(T w, vector<3, T> m) : w(w), m(m) {}
 
 		T w;
-		vector<T, 3> m;
+		vector<3, T> m;
 	};
 
 	template <typename T>
@@ -100,7 +100,7 @@ namespace xm
 	}
 
 	template <typename T>
-	matrix<T, 3> mat3_cast(quaternion<T> a)
+	matrix<3, T> mat3_cast(quaternion<T> a)
 	{
 		T x_2 = a.m.x * a.m.x;
 		T y_2 = a.m.y * a.m.y;
@@ -114,32 +114,32 @@ namespace xm
 		T wx = a.w * a.m.x;
 		T wz = a.w * a.m.z;
 
-		vector<T, 3> c1(
+		vector<3, T> c1(
 			1 - 2 * y_2 - 2 * z_2,
 			2 * xy + 2 * wz,
 			2 * xz - 2 * wy
 		);
 
-		vector<T, 3> c2(
+		vector<3, T> c2(
 			2 * xy - 2 * wz,
 			1 - 2 * x_2 - 2 * z_2,
 			2 * yz + 2 * wz
 		);
 
-		vector<T, 3> c3(
+		vector<3, T> c3(
 			2 * xz + 2 * wy,
 			2 * yz - 2 * wx,
 			1 - 2 * x_2 - 2 * y_2
 		);
 
-		matrix<T, 3> res(c1, c2, c3);
+		matrix<3, T> res(c1, c2, c3);
 
 		return res;
 	}
 
 
 	template <typename T>
-	matrix<T, 4> mat4_cast(quaternion<T> a)
+	matrix<3, T> mat4_cast(quaternion<T> a)
 	{
 		T x_2 = a.m.x * a.m.x;
 		T y_2 = a.m.y * a.m.y;
@@ -153,30 +153,30 @@ namespace xm
 		T wx = a.w * a.m.x;
 		T wz = a.w * a.m.z;
 
-		vector<T, 4> c1(
+		vector<4, T> c1(
 			1 - 2 * y_2 - 2 * z_2,
 			2 * xy + 2 * wz,
 			2 * xz - 2 * wy,
 			0.0f
 		);
 
-		vector<T, 4> c2(
+		vector<4, T> c2(
 			2 * xy - 2 * wz,
 			1 - 2 * x_2 - 2 * z_2,
 			2 * yz + 2 * wz,
 			0.0f
 		);
 
-		vector<T, 4> c3(
+		vector<4, T> c3(
 			2 * xz + 2 * wy,
 			2 * yz - 2 * wx,
 			1 - 2 * x_2 - 2 * y_2,
 			0.0f
 		);
 
-		vector<T, 4> c4(T(0.0), T(0.0), T(0.0), T(1.0));
+		vector<4, T> c4(T(0.0), T(0.0), T(0.0), T(1.0));
 
-		matrix<T, 4> res(c1, c2, c3, c4);
+		matrix<4, T> res(c1, c2, c3, c4);
 
 		return res;
 	}
@@ -253,7 +253,7 @@ namespace xm
 	}
 
 	template <typename T>
-	quaternion<T> quat_from_euler_xyz(vector<T, 3> e)
+	quaternion<T> quat_from_euler_xyz(vector<3, T> e)
 	{
 		quaternion<T> qx = quat_from_euler_x(e.x);
 		quaternion<T> qy = quat_from_euler_y(e.y);
@@ -263,7 +263,7 @@ namespace xm
 	}
 
 	template <typename T>
-	quaternion<T> quat_from_euler_xzy(vector<T, 3> e)
+	quaternion<T> quat_from_euler_xzy(vector<3, T> e)
 	{
 		quaternion<T> qx = quat_from_euler_x(e.x);
 		quaternion<T> qy = quat_from_euler_y(e.y);
@@ -273,7 +273,7 @@ namespace xm
 	}
 
 	template <typename T>
-	quaternion<T> quat_from_euler_yxz(vector<T, 3> e)
+	quaternion<T> quat_from_euler_yxz(vector<3, T> e)
 	{
 		quaternion<T> qx = quat_from_euler_x(e.x);
 		quaternion<T> qy = quat_from_euler_y(e.y);
@@ -283,7 +283,7 @@ namespace xm
 	}
 
 	template <typename T>
-	quaternion<T> quat_from_euler_yzx(vector<T, 3> e)
+	quaternion<T> quat_from_euler_yzx(vector<3, T> e)
 	{
 		quaternion<T> qx = quat_from_euler_x(e.x);
 		quaternion<T> qy = quat_from_euler_y(e.y);
@@ -293,7 +293,7 @@ namespace xm
 	}
 
 	template <typename T>
-	quaternion<T> quat_from_euler_zxy(vector<T, 3> e)
+	quaternion<T> quat_from_euler_zxy(vector<3, T> e)
 	{
 		quaternion<T> qx = quat_from_euler_x(e.x);
 		quaternion<T> qy = quat_from_euler_y(e.y);
@@ -303,7 +303,7 @@ namespace xm
 	}
 
 	template <typename T>
-	quaternion<T> quat_from_euler_zyx(vector<T, 3> e)
+	quaternion<T> quat_from_euler_zyx(vector<3, T> e)
 	{
 		quaternion<T> qx = quat_from_euler_x(e.x);
 		quaternion<T> qy = quat_from_euler_y(e.y);

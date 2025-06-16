@@ -10,5 +10,4 @@ namespace xm
 	constexpr double PI_INV = 1.0 / PI;
 
 	constexpr double PI_OV_180 = PI / 180.0;
-
 }

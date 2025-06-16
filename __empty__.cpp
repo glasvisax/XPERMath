@@ -1,9 +1,9 @@
 #include <iostream>
 
-#include "Source/vector.h"
-#include "Source/matrix.h"
-#include "Source/matrix_transforms.h"
-#include "Source/math_helpers.h"
+#include "xm/vector.h"
+#include "xm/matrix.h"
+#include "xm/matrix_transforms.h"
+#include "xm/math_helpers.h"
 
 using namespace xm;
 

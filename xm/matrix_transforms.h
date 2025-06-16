@@ -245,7 +245,27 @@ namespace xm
 	}
 
 	template <typename T>
-	matrix<4, T> perspectiveLH(T top, T bottom, T right, T left, T near, T far)
+	matrix<4, T> perspectiveLH_EXT(T top, T bottom, T right, T left, T near, T far)
+	{
+		T _2n = 2 * near;
+		T r_minus_l = right - left;
+		T t_minus_b = top - bottom;
+		T n_minus_f = near - far;
+
+		vector<4, T> a(_2n / r_minus_l, 0.0, 0.0, 0.0);
+		vector<4, T> b(0.0, _2n / t_minus_b, 0.0, 0.0);
+		vector<4, T> c(
+			-(right + left) / r_minus_l,
+			-(top + bottom) / t_minus_b,
+			-(far + near) / n_minus_f,
+			1.0);
+		vector<4, T> d(0.0, 0.0, (_2n * far) / n_minus_f, 0.0);
+
+		return matrix<4, T>(a, b, c, d);
+	}
+
+	template <typename T>
+	inline matrix<4, T> perspectiveRH_EXT(T top, T bottom, T right, T left, T near, T far)
 	{
 		T _2n = 2 * near;
 		T r_minus_l = right - left;
@@ -265,13 +285,19 @@ namespace xm
 	}
 
 	template <typename T>
-	inline matrix<4, T> perspectiveRH(T top, T bottom, T right, T left, T near, T far)
+	matrix<4, T> perspectiveLH_STRIP(T top, T right, T near, T far)
 	{
-		return perspectiveLH(top, bottom, right, left, -near, -far);
+		T n_minus_f = near - far;
+		vector<4, T> a(near / right, 0.0, 0.0, 0.0);
+		vector<4, T> b(0.0, near / top, 0.0, 0.0);
+		vector<4, T> c(0.0, 0.0, -(far + near) / n_minus_f, 1.0);
+		vector<4, T> d(0.0, 0.0, (2 * near * far) / n_minus_f, 0.0);
+
+		return matrix<4, T>(a, b, c, d);
 	}
 
 	template <typename T>
-	matrix<4, T> perspectiveLH(T top, T right, T near, T far)
+	inline matrix<4, T> perspectiveRH_STRIP(T top, T right, T near, T far)
 	{
 		T n_minus_f = near - far;
 		vector<4, T> a(near / right, 0.0, 0.0, 0.0);
@@ -283,34 +309,63 @@ namespace xm
 	}
 
 	template <typename T>
-	inline matrix<4, T> perspectiveRH(T top, T right, T near, T far)
-	{
-		return perspectiveLH(top, right, -near, -far);
-	}
-
-	template <typename T>
-	matrix<4, T> perspectiveFOV_LH(T fov_vert_radians, T aspect, T near, T far)
+	matrix<4, T> perspectiveLH_FOV(T fov_vert_radians, T aspect, T near, T far)
 	{
 		T top = tan(fov_vert_radians / 2) * near;
 		T right = top * aspect;
 
-		return perspectiveLH(top, right, near, far);
+		return perspectiveLH_STRIP(top, right, near, far);
 	}
 
 	template <typename T>
-	inline matrix<4, T> perspectiveFOV_RH(T fov_vert_radians, T aspect, T near, T far)
+	inline matrix<4, T> perspectiveRH_FOV(T fov_vert_radians, T aspect, T near, T far)
 	{
-		return perspectiveFOV_LH(fov_vert_radians, aspect, -near, -far);
+		T top = tan(fov_vert_radians / 2) * near;
+		T right = top * aspect;
+
+		return perspectiveRH_STRIP(top, right, near, far);
 	}
 
 	template <typename T>
 	inline matrix<4, T> perspective(T fov_vert_radians, T aspect, T near, T far)
 	{
-		return perspectiveFOV_RH(fov_vert_radians, aspect, near, far);
+		return perspectiveRH_FOV(fov_vert_radians, aspect, near, far);
 	}
 
 	template <typename T>
-	matrix<4, T> orthographicLH(T top, T bottom, T right, T left, T near, T far)
+	matrix<4, T> orthographicLH_EXT(T top, T bottom, T right, T left, T near, T far)
+	{
+		T t_minus_b = top - bottom;
+		T n_minus_f = near - far;
+		T r_minus_l = right - left;
+
+		vector<4, T> a(2.0 / r_minus_l, 0.0, 0.0, 0.0);
+		vector<4, T> b(0.0, 2.0 / t_minus_b, 0.0, 0.0);
+		vector<4, T> c(0.0, 0.0, -2.0 / n_minus_f, 0.0);
+		vector<4, T> d(
+			-(right + left) / r_minus_l,
+			-(top + bottom) / t_minus_b,
+			(far + near) / n_minus_f,
+			1.0);
+
+		return matrix<4, T>(a, b, c, d);
+	}
+
+	template <typename T>
+	matrix<4, T> orthographicLH_STRIP(T top, T right, T near, T far)
+	{
+		T n_minus_f = near - far;
+
+		vector<4, T> a(1.0 / right, 0.0, 0.0, 0.0);
+		vector<4, T> b(0.0, 1.0 / top, 0.0, 0.0);
+		vector<4, T> c(0.0, 0.0, -2.0 / n_minus_f, 0.0);
+		vector<4, T> d(0.0, 0.0, (far + near) / n_minus_f, 1.0);
+
+		return matrix<4, T>(a, b, c, d);
+	}
+
+	template <typename T>
+	inline matrix<4, T> orthographicRH_EXT(T top, T bottom, T right, T left, T near, T far)
 	{
 		T t_minus_b = top - bottom;
 		T n_minus_f = near - far;
@@ -329,33 +384,21 @@ namespace xm
 	}
 
 	template <typename T>
-	matrix<4, T> orthographicLH(T top, T right, T near, T far)
+	inline matrix<4, T> orthographicRH_STRIP(T top, T right, T near, T far)
 	{
 		T n_minus_f = near - far;
 
 		vector<4, T> a(1.0 / right, 0.0, 0.0, 0.0);
 		vector<4, T> b(0.0, 1.0 / top, 0.0, 0.0);
-		vector<4, T> c(0.0, 0.0, 2 / n_minus_f, 0.0);
+		vector<4, T> c(0.0, 0.0, 2.0 / n_minus_f, 0.0);
 		vector<4, T> d(0.0, 0.0, (far + near) / n_minus_f, 1.0);
 
 		return matrix<4, T>(a, b, c, d);
 	}
 
 	template <typename T>
-	inline matrix<4, T> orthographicRH(T top, T bottom, T right, T left, T near, T far)
-	{
-		return orthographicLH(top, bottom, right, left, -near, -far);
-	}
-
-	template <typename T>
-	inline matrix<4, T> orthographicRH(T top, T right, T near, T far)
-	{
-		return orthographicLH(top, right, -near, -far);
-	}
-
-	template <typename T>
 	inline matrix<4, T> orthographic(T top, T bottom, T right, T left, T near, T far)
 	{
-		return orthographicRH(top, bottom, right, left, near, far);
+		return orthographicRH_EXT(top, bottom, right, left, near, far);
 	}
 }
