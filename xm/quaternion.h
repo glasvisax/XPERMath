@@ -214,12 +214,12 @@ namespace xm
 	}
 
 	template <typename T>
-	quaternion<T> quat_from_euler_x(T x)
+	quaternion<T> quat_from_euler_x(T radians)
 	{
 		return quaternion<T>(
-			cos(e.x / 2),
-			vector<T, 3>(
-				sin(e.x / 2),
+			cos(radians / 2),
+			vector<3, T>(
+				sin(radians / 2),
 				T(0.0),
 				T(0.0)
 			)
@@ -227,26 +227,26 @@ namespace xm
 	}
 
 	template <typename T>
-	quaternion<T> quat_from_euler_y(T y)
+	quaternion<T> quat_from_euler_y(T radians)
 	{
 		return quaternion<T>(
-			cos(e.y / 2),
-			vector<T, 3>(
+			cos(radians / 2),
+			vector<3, T>(
 				T(0.0),
-				sin(e.y / 2),
+				sin(radians / 2),
 				T(0.0)
 			)
 		);
 	}
 	template <typename T>
-	quaternion<T> quat_from_euler_z(T z)
+	quaternion<T> quat_from_euler_z(T radians)
 	{
 		return quaternion<T>(
-			cos(e.z / 2),
-			vector<T, 3>(
+			cos(radians / 2),
+			vector<3, T>(
 				T(0.0),
 				T(0.0),
-				sin(e.z / 2)
+				sin(radians / 2)
 			)
 		);
 

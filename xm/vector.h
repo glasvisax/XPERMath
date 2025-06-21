@@ -41,12 +41,6 @@ namespace xm
 			return *(&x + i);
 		}
 
-		void operator-()
-		{
-			x = -x;
-			y = -y;
-		}
-
 		union
 		{
 			struct { T x, y; };
@@ -89,13 +83,6 @@ namespace xm
 		T operator[](uint8_t i) const
 		{
 			return *(&x + i);
-		}
-
-		void operator-()
-		{
-			x = -x;
-			y = -y;
-			z = -z;
 		}
 
 		union
@@ -144,14 +131,6 @@ namespace xm
 			return *(&x + i);
 		}
 
-		void operator-()
-		{
-			x = -x;
-			y = -y;
-			z = -z;
-			w = -w;
-		}
-
 		union
 		{
 			struct { T x, y, z, w; };
@@ -162,7 +141,7 @@ namespace xm
 	template <uint8_t N, typename T>
 	vector<N, T> operator*(vector<N, T> a, T v)
 	{
-		vector<T, N> res;
+		vector<N, T> res;
 		for (int i = 0; i < N; ++i)
 		{
 			res[i] = a[i] * v;
@@ -179,7 +158,7 @@ namespace xm
 	template <uint8_t N, typename T>
 	vector<N, T> operator/(vector<N, T> a, T v)
 	{
-		vector<T, N> res;
+		vector<N, T> res;
 		for (int i = 0; i < N; ++i)
 		{
 			res[i] = a[i] / v;
@@ -190,7 +169,7 @@ namespace xm
 	template <uint8_t N, typename T>
 	vector<N, T> operator+(vector<N, T> a, vector<N, T> b)
 	{
-		vector<T, N> res;
+		vector<N, T> res;
 		for (int i = 0; i < N; ++i)
 		{
 			res[i] = a[i] + b[i];
@@ -199,11 +178,40 @@ namespace xm
 	}
 
 	template <uint8_t N, typename T>
+	inline vector<N, T> operator-(vector<N, T> a)
+	{
+		for (int i = 0; i < N; ++i)
+		{
+			a[i] = -a[i];
+		}
+		return a;
+	}
+
+	template <uint8_t N, typename T>
 	inline vector<N, T> operator-(vector<N, T> a, vector<N, T> b)
 	{
 		return operator+(a, -b);
 	}
 
+	template <uint8_t N, typename T>
+	inline vector<N, T>& operator+=(vector<N, T>& a, vector<N, T> b)
+	{
+		for (int i = 0; i < N; ++i)
+		{
+			a[i] += b[i];
+		}
+		return a;
+	}
+
+	template <uint8_t N, typename T>
+	inline vector<N, T> operator-=(vector<N, T>& a, vector<N, T> b)
+	{
+		for (int i = 0; i < N; ++i)
+		{
+			a[i] -= b[i];
+		}
+		return a;
+	}
 
 	template <uint8_t N, typename T>
 	T dot(vector<N, T> a, vector<N, T> b)
@@ -221,7 +229,7 @@ namespace xm
 	template <typename T>
 	vector<3, T> crossRH(vector<3, T> a, vector<3, T> b)
 	{
-		vector<T, 3> res;
+		vector<3, T> res;
 
 		res.x = a.y * b.z - a.z * b.y;
 		res.y = a.z * b.x - a.x * b.z;
@@ -262,7 +270,7 @@ namespace xm
 	template <uint8_t N, typename T>
 	inline vector<N, T> normalize(vector<N, T> a)
 	{
-		return vector<N, T> / sqrt(sumOfSquares(a));
+		return a / sqrt(sumOfSquares(a));
 	}
 
 }

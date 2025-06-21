@@ -2,6 +2,8 @@
 
 #include <cmath>
 #include "matrix.h"
+#include <tuple>
+
 
 namespace xm
 {
@@ -209,7 +211,7 @@ namespace xm
 	}
 
 	template <typename T>
-	matrix<4, T> lookAtRH(vector<3, T> look_dir, vector<3, T> eye_pos, vector<3, T> world_up)
+	std::tuple<matrix<4, T>, vector<3, T>, vector<3, T>> lookAtRH(vector<3, T> eye_pos, vector<3, T> look_dir, vector<3, T> world_up)
 	{
 		vector<3, T> x = normalize(crossRH(world_up, -look_dir));
 		vector<3, T> y = normalize(crossRH(-look_dir, x));
@@ -220,11 +222,11 @@ namespace xm
 		vector<4, T> c(x.z, y.z, z.z, 0.0);
 		vector<4, T> d(dot(x, -eye_pos), dot(y, -eye_pos), dot(z, -eye_pos), 1.0);
 
-		return matrix<4, T>(a, b, c, d);
+		return std::make_tuple(matrix<4, T>(a, b, c, d), x, y);
 	}
 
 	template <typename T>
-	matrix<4, T> lookAtLH(vector<3, T> look_dir, vector<3, T> eye_pos, vector<3, T> world_up)
+	std::tuple<matrix<4, T>, vector<3, T>, vector<3, T>> lookAtLH(vector<3, T> eye_pos, vector<3, T> look_dir, vector<3, T> world_up)
 	{
 		vector<3, T> x = normalize(crossLH(world_up, -look_dir));
 		vector<3, T> y = normalize(crossLH(-look_dir, x));
@@ -235,13 +237,13 @@ namespace xm
 		vector<4, T> c(x.z, y.z, z.z, 0.0);
 		vector<4, T> d(dot(x, -eye_pos), dot(y, -eye_pos), dot(z, -eye_pos), 1.0);
 
-		return matrix<4, T>(a, b, c, d);
+		return std::make_tuple(matrix<4, T>(a, b, c, d), x, y);
 	}
 
 	template <typename T>
-	inline matrix<4, T> lookAt(vector<3, T> look_dir, vector<3, T> eye_pos, vector<3, T> world_up = vector<3, T>(0.0, 1.0, 0.0))
+	inline std::tuple<matrix<4, T>, vector<3, T>, vector<3, T>> lookAt(vector<3, T> eye_pos, vector<3, T> look_dir, vector<3, T> world_up = vector<3, T>(0.0, 1.0, 0.0))
 	{
-		return lookAtRH(look_dir, eye_pos, world_up);
+		return lookAtRH(eye_pos, look_dir, world_up);
 	}
 
 	template <typename T>

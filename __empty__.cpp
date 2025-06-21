@@ -4,7 +4,7 @@
 #include "xm/matrix.h"
 #include "xm/matrix_transforms.h"
 #include "xm/math_helpers.h"
-
+#include "xm/typedefs.h"
 using namespace xm;
 
 using vec3 = vector<3, float>;
@@ -38,7 +38,25 @@ void printMatrix(matrix<N, T> mat)
 
 void main()
 {
-	printMatrix(eulRotZ<4>(to_radians(90.0f)));
+	xm::vec3 m_position{ 0.0f, 0.0f, 0.0f };
 
-	printMatrix(translate(mat4(1.0f), vec3(2.0f, 2.0f, 2.0f)));
+	xm::vec3 m_look_dir{ 0.0f, 0.0f, 1.0f };
+	xm::vec3 m_right{ 1.0f, 0.0f, 0.0f };
+	xm::vec3 m_up{ 0.0f, 1.0f, 0.0f };
+
+	xm::vec3 m_world_up{ 0.0f, 1.0f, 0.0f };
+
+	auto [m, x, y] = lookAtRH(m_position, m_look_dir, m_world_up);
+
+
+	//vector<3, float> f(normalize(look_dir));
+	//vector<3, float> s(normalize(cross(f, world_up)));
+	//vector<3, float> u(cross(s, f));
+	//f = -f;
+
+	//vector<3, float> z = normalize(-look_dir);
+	//vector<3, float> x = normalize(crossRH(world_up, -look_dir));
+	//vector<3, float> y = normalize(crossRH(-look_dir, x));
+
+
 }
