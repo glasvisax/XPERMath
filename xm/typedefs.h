@@ -13,18 +13,22 @@ namespace xm
 	using mat3 = matrix<3, float>;
 	using mat4 = matrix<4, float>;
 
-	using vec2i = vector<2, int>;
-	using vec3i = vector<3, int>;
-	using vec4i = vector<4, int>;
+	using ivec2 = vector<2, int>;
+	using ivec3 = vector<3, int>;
+	using ivec4 = vector<4, int>;
 
-	using vec2d = vector<2, double>;
-	using vec3d = vector<3, double>;
-	using vec4d = vector<4, double>;
+	using uvec2 = vector<2, unsigned int>;
+	using uvec3 = vector<3, unsigned int>;
+	using uvec4 = vector<4, unsigned int>;
 
-	using mat2d = matrix<2, double>;
-	using mat3d = matrix<3, double>;
-	using mat4d = matrix<4, double>;
+	using dvec2 = vector<2, double>;
+	using dvec3 = vector<3, double>;
+	using dvec4 = vector<4, double>;
+
+	using dmat2 = matrix<2, double>;
+	using dmat3 = matrix<3, double>;
+	using dmat4 = matrix<4, double>;
 
 	using quat = quaternion<float>;
-	using quatd = quaternion<double>;
+	using dquat = quaternion<double>;
 };

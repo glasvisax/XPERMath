@@ -79,7 +79,7 @@ namespace xm
 			vector<4, T> c(sin_theta, 0.0, cos_theta, 0.0);
 			vector<4, T> d(0.0, 0.0, 0.0, 1.0);
 
-			matrix<T, 4> res(a, b, c, d);
+			matrix<4, T> res(a, b, c, d);
 			return res;
 
 		}
@@ -167,7 +167,9 @@ namespace xm
 
 	}
 
-	// axis must be unit vector
+	// axis		- asix of rotation, must be unit vector
+	// rotated	- rotated vector
+	// radians	- angle in radians
 	template <uint8_t N, typename T>
 	matrix<N, T> rotate(const matrix<N, T>& rotated, vector<3, T> axis, T radians)
 	{
@@ -180,26 +182,35 @@ namespace xm
 	}
 
 	template <uint8_t N, typename T>
-	matrix<N, T> scale(const matrix<N, T>& scaled, vector<3, T> scale)
+	matrix<N, T> scale(const matrix<N, T>& scaled, vector<3, T> scale_vec)
 	{
 		if constexpr (N == 3)
 		{
-			vector<3, T> a(scaled.a.x * scale.x, scaled.a.y * scale.y, scaled.a.z * scale.z);
-			vector<3, T> b(scaled.b.x * scale.x, scaled.b.y * scale.y, scaled.b.z * scale.z);
-			vector<3, T> c(scaled.c.x * scale.x, scaled.c.y * scale.y, scaled.c.z * scale.z);
-			return matrix<3, T>(a, b, c, d);
+			vector<3, T> a = scaled.a * scale_vec.x;
+			vector<3, T> b = scaled.b * scale_vec.y;
+			vector<3, T> c = scaled.c * scale_vec.z;
+			return matrix<3, T>(a, b, c);
 		}
 		else if constexpr (N == 4)
 		{
-			vector<4, T> a(scaled.a.x * scale.x, scaled.a.y * scale.y, scaled.a.z * scale.z, 0.0);
-			vector<4, T> b(scaled.b.x * scale.x, scaled.b.y * scale.y, scaled.b.z * scale.z, 0.0);
-			vector<4, T> c(scaled.c.x * scale.x, scaled.c.y * scale.y, scaled.c.z * scale.z, 0.0);
-			vector<4, T> d(scaled.d.x * scale.x, scaled.d.y * scale.y, scaled.d.z * scale.z, 1.0);
+			vector<4, T> a = vector<4, T>(scaled.a.x * scale_vec.x,
+				scaled.a.y * scale_vec.x,
+				scaled.a.z * scale_vec.x,
+				scaled.a.w);
+			vector<4, T> b = vector<4, T>(scaled.b.x * scale_vec.y,
+				scaled.b.y * scale_vec.y,
+				scaled.b.z * scale_vec.y,
+				scaled.b.w);
+			vector<4, T> c = vector<4, T>(scaled.c.x * scale_vec.z,
+				scaled.c.y * scale_vec.z,
+				scaled.c.z * scale_vec.z,
+				scaled.c.w);
+			vector<4, T> d = scaled.d;
 			return matrix<4, T>(a, b, c, d);
 		}
 		else
 		{
-			static_assert(false && "N must be 3 or 4");
+			static_assert(false, "N must be 3 or 4");
 		}
 	}
 
@@ -210,12 +221,16 @@ namespace xm
 		return matrix<4, T>(translated.a, translated.b, translated.c, last_column);
 	}
 
+	// eye_pos	-	view position
+	// look_dir	-	direction of view, must be unit 
+	// world_up -	world up vector, must be unit
+	// return	-	tuple [view matrix, right vector, up vector]
 	template <typename T>
 	std::tuple<matrix<4, T>, vector<3, T>, vector<3, T>> lookAtRH(vector<3, T> eye_pos, vector<3, T> look_dir, vector<3, T> world_up)
 	{
-		vector<3, T> x = normalize(crossRH(world_up, -look_dir));
-		vector<3, T> y = normalize(crossRH(-look_dir, x));
-		vector<3, T> z = normalize(-look_dir);
+		vector<3, T> x = crossRH(world_up, -look_dir);
+		vector<3, T> y = crossRH(-look_dir, x);
+		vector<3, T> z = -look_dir;
 
 		vector<4, T> a(x.x, y.x, z.x, 0.0);
 		vector<4, T> b(x.y, y.y, z.y, 0.0);
@@ -225,12 +240,36 @@ namespace xm
 		return std::make_tuple(matrix<4, T>(a, b, c, d), x, y);
 	}
 
+	// eye_pos		-	view position
+	// look_dir		-	direction of view, must be unit 
+	// eye_up		-	view up direcion, must be unit
+	// eye_right	-	view right direcion, must be unit
+	// return		-	tuple [view matrix, right vector, up vector]
+	template <typename T>
+	matrix<4, T> lookAtRH_EXT(vector<3, T> eye_pos, vector<3, T> look_dir, vector<3, T> eye_up, vector<3, T> eye_right)
+	{
+		vector<3, T> x = eye_right;
+		vector<3, T> y = eye_up;
+		vector<3, T> z = -look_dir;
+
+		vector<4, T> a(x.x, y.x, z.x, 0.0);
+		vector<4, T> b(x.y, y.y, z.y, 0.0);
+		vector<4, T> c(x.z, y.z, z.z, 0.0);
+		vector<4, T> d(dot(x, -eye_pos), dot(y, -eye_pos), dot(z, -eye_pos), 1.0);
+
+		return matrix<4, T>(a, b, c, d);
+	}
+
+	// eye_pos	-	view position
+	// look_dir	-	direction of view, must be unit 
+	// world_up -	world up vector, must be unit
+	// return	-	tuple [view matrix, right vector, up vector]
 	template <typename T>
 	std::tuple<matrix<4, T>, vector<3, T>, vector<3, T>> lookAtLH(vector<3, T> eye_pos, vector<3, T> look_dir, vector<3, T> world_up)
 	{
-		vector<3, T> x = normalize(crossLH(world_up, -look_dir));
-		vector<3, T> y = normalize(crossLH(-look_dir, x));
-		vector<3, T> z = normalize(look_dir);
+		vector<3, T> x = crossLH(world_up, -look_dir);
+		vector<3, T> y = crossLH(-look_dir, x);
+		vector<3, T> z = look_dir;
 
 		vector<4, T> a(x.x, y.x, z.x, 0.0);
 		vector<4, T> b(x.y, y.y, z.y, 0.0);
@@ -240,9 +279,25 @@ namespace xm
 		return std::make_tuple(matrix<4, T>(a, b, c, d), x, y);
 	}
 
+	// eye_pos		-	view position
+	// look_dir		-	direction of view, must be unit 
+	// eye_up		-	view up direcion, must be unit
+	// eye_right	-	view right direcion, must be unit
+	// return		-	tuple [view matrix, right vector, up vector]
 	template <typename T>
-	inline std::tuple<matrix<4, T>, vector<3, T>, vector<3, T>> lookAt(vector<3, T> eye_pos, vector<3, T> look_dir, vector<3, T> world_up = vector<3, T>(0.0, 1.0, 0.0))
+	matrix<4, T> lookAtLH_EXT(vector<3, T> eye_pos, vector<3, T> look_dir, vector<3, T> eye_up, vector<3, T> eye_right)
 	{
+		lookAtRH_EXT(eye_pos, -look_dir, eye_up, eye_right);
+	}
+
+	// eye_pos	-	view position
+	// look_dir	-	direction of view, must be unit 
+	// world_up -	world up vector, must be unit
+	// return	-	tuple [view matrix, right vector, up vector]
+	template <typename T>
+	inline std::tuple<matrix<4, T>, vector<3, T>, vector<3, T>> lookAt(vector<3, T> eye_pos, vector<3, T> center, vector<3, T> world_up = vector<3, T>(0.0, 1.0, 0.0))
+	{
+		vector<3, T> look_dir = center - eye_pos;
 		return lookAtRH(eye_pos, look_dir, world_up);
 	}
 

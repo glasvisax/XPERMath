@@ -10,6 +10,7 @@ namespace xm
 	struct quaternion
 	{
 		quaternion() = default;
+		quaternion(T w, T x, T y, T z) : w(w), m(x, y, z) {}
 		quaternion(T w, vector<3, T> m) : w(w), m(m) {}
 
 		T w;
@@ -139,7 +140,7 @@ namespace xm
 
 
 	template <typename T>
-	matrix<3, T> mat4_cast(quaternion<T> a)
+	matrix<4, T> mat4_cast(quaternion<T> a)
 	{
 		T x_2 = a.m.x * a.m.x;
 		T y_2 = a.m.y * a.m.y;

@@ -48,7 +48,7 @@ namespace xm
 
 		const vector<2, T>& operator[] (uint8_t i) const
 		{
-			return (&a + i);
+			return *(&a + i);
 		}
 
 		vector<2, T> a;
@@ -111,7 +111,7 @@ namespace xm
 
 		const vector<3, T>& operator[] (uint8_t i) const
 		{
-			return (&a + i);
+			return *(&a + i);
 		}
 
 		vector<3, T> a;
@@ -222,5 +222,55 @@ namespace xm
 		}
 		return res;
 	}
+
+	template <uint8_t N, typename T>
+	T determinant(matrix<N, T> m)
+	{
+		if constexpr (N == 2)
+		{
+			return m.a.x * m.b.y - m.a.y * m.b.x;
+		}
+
+		if constexpr (N == 3)
+		{
+			matrix<2, T> minor00{ {m.b.y, m.b.z}, {m.c.y, m.c.z} };
+			matrix<2, T> minor10{ {m.b.x, m.b.z}, {m.c.x, m.c.z} };
+			matrix<2, T> minor20{ {m.b.x, m.b.y}, {m.c.x, m.c.y} };
+
+			T det00 = determinant(minor00);
+			T det10 = determinant(minor10);
+			T det20 = determinant(minor20);
+
+			return m.a.x * det00 - m.a.y * det10 + m.a.z * det20;
+		}
+
+		if constexpr (N == 4)
+		{
+			matrix<3, T> minor00{ {m.b.y, m.b.z, m.b.w},
+								  {m.c.y, m.c.z, m.c.w},
+								  {m.d.y, m.d.z, m.d.w} };
+			matrix<3, T> minor10{ {m.b.x, m.b.z, m.b.w},
+								  {m.c.x, m.c.z, m.c.w},
+								  {m.d.x, m.d.z, m.d.w} };
+			matrix<3, T> minor20{ {m.b.x, m.b.y, m.b.w},
+								  {m.c.x, m.c.y, m.c.w},
+								  {m.d.x, m.d.y, m.d.w} };
+			matrix<3, T> minor30{ {m.b.x, m.b.y, m.b.z},
+								  {m.c.x, m.c.y, m.c.z},
+								  {m.d.x, m.d.y, m.d.z} };
+
+			T det00 = determinant(minor00);
+			T det10 = determinant(minor10);
+			T det20 = determinant(minor20);
+			T det30 = determinant(minor30);
+
+			return m.a.x * det00
+				- m.a.y * det10
+				+ m.a.z * det20
+				- m.a.w * det30;
+		}
+	}
+
+
 
 }

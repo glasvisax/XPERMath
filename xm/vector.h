@@ -142,7 +142,7 @@ namespace xm
 	vector<N, T> operator*(vector<N, T> a, T v)
 	{
 		vector<N, T> res;
-		for (int i = 0; i < N; ++i)
+		for (uint8_t i = 0; i < N; ++i)
 		{
 			res[i] = a[i] * v;
 		}
@@ -156,10 +156,27 @@ namespace xm
 	}
 
 	template <uint8_t N, typename T>
+	vector<N, T>& operator*=(vector<N, T>& a, T v)
+	{
+		for (uint8_t i = 0; i < N; ++i)
+		{
+			a[i] *= v;
+		}
+		return a;
+	}
+
+	template <uint8_t N, typename T>
+	vector<N, T>& operator/=(vector<N, T>& a, T v)
+	{
+		for (uint8_t i = 0; i < N; ++i) a[i] /= v;
+		return a;
+	}
+
+	template <uint8_t N, typename T>
 	vector<N, T> operator/(vector<N, T> a, T v)
 	{
 		vector<N, T> res;
-		for (int i = 0; i < N; ++i)
+		for (uint8_t i = 0; i < N; ++i)
 		{
 			res[i] = a[i] / v;
 		}
@@ -170,7 +187,7 @@ namespace xm
 	vector<N, T> operator+(vector<N, T> a, vector<N, T> b)
 	{
 		vector<N, T> res;
-		for (int i = 0; i < N; ++i)
+		for (uint8_t i = 0; i < N; ++i)
 		{
 			res[i] = a[i] + b[i];
 		}
@@ -178,9 +195,9 @@ namespace xm
 	}
 
 	template <uint8_t N, typename T>
-	inline vector<N, T> operator-(vector<N, T> a)
+	vector<N, T> operator-(vector<N, T> a)
 	{
-		for (int i = 0; i < N; ++i)
+		for (uint8_t i = 0; i < N; ++i)
 		{
 			a[i] = -a[i];
 		}
@@ -196,7 +213,7 @@ namespace xm
 	template <uint8_t N, typename T>
 	inline vector<N, T>& operator+=(vector<N, T>& a, vector<N, T> b)
 	{
-		for (int i = 0; i < N; ++i)
+		for (uint8_t i = 0; i < N; ++i)
 		{
 			a[i] += b[i];
 		}
@@ -204,9 +221,9 @@ namespace xm
 	}
 
 	template <uint8_t N, typename T>
-	inline vector<N, T> operator-=(vector<N, T>& a, vector<N, T> b)
+	inline vector<N, T>& operator-=(vector<N, T>& a, vector<N, T> b)
 	{
-		for (int i = 0; i < N; ++i)
+		for (uint8_t i = 0; i < N; ++i)
 		{
 			a[i] -= b[i];
 		}
@@ -218,7 +235,7 @@ namespace xm
 	{
 		T res = T(0.0);
 
-		for (int i = 0; i < N; ++i)
+		for (uint8_t i = 0; i < N; ++i)
 		{
 			res += a[i] * b[i];
 		}
@@ -260,7 +277,7 @@ namespace xm
 	inline T sumOfSquares(vector<N, T> a)
 	{
 		T sum = 0.0;
-		for (int i = 0; i < N; ++i)
+		for (uint8_t i = 0; i < N; ++i)
 		{
 			sum += a[i] * a[i];
 		}
